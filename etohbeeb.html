@@ -3,10 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/etohbeeb.css">
+    <link rel="stylesheet" href="./css/etohbeeb.css">
     <title>Admin Login</title>
     <style>
-       
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="password"] {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -17,6 +70,21 @@
             <button type="submit">Login</button>
         </form>
     </div>
-    <script src="js/etohbeeb.js"></script>
+    <script>
+        const adminPassword = 'ETOHBEEB'; // Set your secure admin password here
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const enteredPassword = document.getElementById('adminPassword').value;
+        
+            if (enteredPassword === adminPassword) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                window.location.href = 'etoh.html'; // Redirect to the admin section
+            } else {
+                alert('Incorrect admin password!');
+            }
+        });
+    </script>
 </body>
 </html>
